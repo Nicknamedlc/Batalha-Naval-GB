@@ -30,6 +30,11 @@ public interface Menu {
 			}
 		}
 	}
+	
+	public static void enviaTiro(int[] tiro , Pareamento peer) {
+		String cocatena = ""+tiro[0]+""+tiro[1];
+		peer.enviaString(cocatena);
+	}
 
 	public static int[] traduz(String texto) {
 		int[] pos = new int[2];
@@ -68,7 +73,7 @@ public interface Menu {
 				e.printStackTrace();
 			}
 
-			String jsonMentirinha = "[\n ";
+			String jsonMentirinha = "[ ";
 			Tabuleiro jogador = new Tabuleiro();
 			for (int i = 0; i < jogador.getNaviosTabuleiro().length; i++) {
 				switch (naviosj) {
@@ -92,7 +97,10 @@ public interface Menu {
 					jsonMentirinha += jogador.getNaviosTabuleiro()[i].toString();
 				else
 					jsonMentirinha += jogador.getNaviosTabuleiro()[i].toString() + ",";
+				System.out.println(jsonMentirinha);
+
 			}
+			System.out.println(jsonMentirinha);
 			peer.enviaString(jsonMentirinha);
 			try {
 				sTabAdv = peer.recebeString();
@@ -115,25 +123,17 @@ public interface Menu {
 					break;
 				}
 			}
+			try {
+				peer.fechaContato();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		case 2: {
-			String sTabAdv = "";
-			try {
-				peer.iniciaServer(porta);
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			try {
-				sTabAdv = peer.recebeString();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			Tabuleiro adv = traduzTabuleiro(sTabAdv, true);
 			int naviosJ = 0, aux = 0, naviosAdv = 0;
 
-			String jsonMentirinha = "[\n ";
+			String jsonMentirinha = "[ ";
 			Tabuleiro jogador = new Tabuleiro();
 			for (int i = 0; i < jogador.getNaviosTabuleiro().length; i++) {
 				switch (naviosJ) {
@@ -158,7 +158,26 @@ public interface Menu {
 				else
 					jsonMentirinha += jogador.getNaviosTabuleiro()[i].toString() + ",";
 			}
+			System.out.println(jsonMentirinha);
 			peer.enviaString(jsonMentirinha);
+
+			String sTabAdv = "";
+			Tabuleiro adv = traduzTabuleiro(sTabAdv, true);
+			
+			try {
+				peer.iniciaServer(porta);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			try {
+				sTabAdv = peer.recebeString();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+			
 			while (inGame) {
 				System.out.println(adv.toString());
 
@@ -181,6 +200,12 @@ public interface Menu {
 					System.out.println("Você Perdeu!!!!");
 				}
 			}
+			try {
+				peer.fechaContato();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
 		}
 		case 4: {
@@ -189,15 +214,16 @@ public interface Menu {
 		}
 		default:
 			throw new IllegalArgumentException("Unexpected value: " + op);
-		}
 
+		}
+		
 	}
 
 	public static Tabuleiro traduzTabuleiro(String sTab, boolean isAdv) {
 		// TODO devolver tabuleiro
 		Navio[] arrNavio = new Navio[6];
 		String[] slice1 = sTab.split("{");
-		slice1[0].isEmpty();
+		
 		if (isAdv)
 			return new Tabuleiro(isAdv, arrNavio);
 		else

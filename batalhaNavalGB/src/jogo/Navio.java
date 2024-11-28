@@ -58,7 +58,7 @@ public class Navio {
 		String sTipo = '"' + "tipo" + '"';
 		String sPosicao = '"' + "posicao" + '"';
 
-		return("{\n "+sTipo+":"+ modelo +"\n "+sPosicao+": ["+posString +"]\n}");
+		return("{ "+sTipo+":"+ modelo +" "+sPosicao+": ["+posString +"]}");
 	}
 	
 	
