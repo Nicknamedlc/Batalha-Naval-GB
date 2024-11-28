@@ -1,7 +1,6 @@
 package utilitarios;
 
 import java.io.IOException;
-import java.nio.file.attribute.FileStoreAttributeView;
 import java.util.ArrayList;
 
 import conexao.Pareamento;
@@ -103,7 +102,7 @@ public interface Menu {
 			}
 			Tabuleiro adv = traduzTabuleiro(sTabAdv, true);
 			while (inGame) {
-
+				System.out.println(adv.toString());
 				// try receber mensagem
 				try {
 					atira = peer.recebeString();
@@ -161,6 +160,7 @@ public interface Menu {
 			}
 			peer.enviaString(jsonMentirinha);
 			while (inGame) {
+				System.out.println(adv.toString());
 
 				// try receber mensagem
 				try {
@@ -172,6 +172,13 @@ public interface Menu {
 				System.out.println("Cliente: " + atira);
 				if (atira.equalsIgnoreCase("exit")) {
 					break;
+				}
+				if(naviosAdv<1) {
+					inGame=false;
+					System.out.println("Você Ganhou!!!!");
+				}else if(naviosJ<1) {
+					inGame=false;
+					System.out.println("Você Perdeu!!!!");
 				}
 			}
 
@@ -189,7 +196,8 @@ public interface Menu {
 	public static Tabuleiro traduzTabuleiro(String sTab, boolean isAdv) {
 		// TODO devolver tabuleiro
 		Navio[] arrNavio = new Navio[6];
-		String[] slice1 = sTab.split(sTab);
+		String[] slice1 = sTab.split("{");
+		slice1[0].isEmpty();
 		if (isAdv)
 			return new Tabuleiro(isAdv, arrNavio);
 		else
